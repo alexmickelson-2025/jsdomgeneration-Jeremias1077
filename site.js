@@ -4,31 +4,59 @@ console.log(animals[0]); // example showing you can use the animals array and th
 
 const createCardElement = (animal) => {
   const cardElement = document.createElement("div");
-  const cardContainerElement = document.createElement("div");
-  const imgElement = document.createElement("img");
-  const textElement = document.createElement("p");
-  const headerElement = document.createElement("h3");
+  cardElement.className = "card";
 
+  const imgElement = document.createElement("img");
   imgElement.src = animal.image;
+
+  const cardTextElement = document.createElement("div");
+  cardTextElement.className = "card-text";
+
+  const headerElement = document.createElement("h3");
   headerElement.textContent = animal.title;
+
+  const textElement = document.createElement("p");
   textElement.textContent = animal.description;
 
   cardElement.appendChild(imgElement);
-  cardContainerElement.appendChild(headerElement);
-  cardContainerElement.appendChild(textElement);
+  cardElement.appendChild(cardTextElement);
 
-  cardElement.appendChild(cardContainerElement);
+  cardTextElement.appendChild(headerElement);
+  cardTextElement.appendChild(textElement);
 
   console.log(cardElement);
 
   return cardElement;
 };
-const firstAnimalElement = createCardElement(animals[0]);
 
 const cardContainerElement = document.getElementById("card-container-id");
-cardContainerElement.replaceChildren();
-cardContainerElement.appendChild(firstAnimalElement);
+// cardContainerElement.replaceChildren();
 
-animals.forEach((animal) => {
-    animal = createCardElement;
+// animals.forEach((animal) => {
+//   const animalCard = createCardElement(animal);
+//   cardContainerElement.appendChild(animalCard);
+// });
+
+const queryString = new URLSearchParams(window.location.search);
+const filterString = queryString.get("filter");
+const searchTerm = filterString ? filterString.toLowerCase() : null;
+
+console.log(searchTerm);
+
+const filteredAnimals = animals.filter((animal) => {
+  if (!searchTerm) {
+    return true;
+  }
+  return (
+    animal.title.toLowerCase().includes(searchTerm) ||
+    animal.description.toLowerCase().includes(searchTerm)
+  );
+});
+
+console.log(filteredAnimals);
+cardContainerElement.replaceChildren();
+
+filteredAnimals.forEach((animal) => {
+  const animalCard = createCardElement(animal);
+  cardContainerElement.appendChild(animalCard);
 });
